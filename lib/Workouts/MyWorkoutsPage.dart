@@ -47,7 +47,7 @@ class _MyWorkoutsPageState extends State<MyWorkoutsPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               OptionSelector(),
               const SizedBox(height: 20,),
               Container(

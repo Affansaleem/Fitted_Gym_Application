@@ -35,7 +35,7 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
               Positioned(
                 top: 400,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
                   width: 380,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -64,7 +64,7 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       // Full Name
                       TextField(
                         decoration: InputDecoration(
@@ -75,14 +75,14 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: Icon(Icons.email_outlined, color: Colors.black), // Icon for email
+                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black), // Icon for email
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
-                      SizedBox(height: 20,),
-                      Text("Try Another Way", style: TextStyle(color: Colors.white,fontSize: 18),),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
+                      const Text("Try Another Way", style: TextStyle(color: Colors.white,fontSize: 18),),
+                      const SizedBox(height: 20,),
 
                       // Sign In Button
                       ElevatedButton(

@@ -43,7 +43,7 @@ class _ForgetPassword2PagePageState extends State<ForgetPassword2PagePage> {
               Positioned(
                 top: 400,
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
                   width: 380,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -72,7 +72,7 @@ class _ForgetPassword2PagePageState extends State<ForgetPassword2PagePage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       // Full Name
                       TextField(
                         decoration: InputDecoration(
@@ -83,14 +83,14 @@ class _ForgetPassword2PagePageState extends State<ForgetPassword2PagePage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: Icon(Icons.verified_user_outlined, color: Colors.black), // Icon for email
+                          prefixIcon: const Icon(Icons.verified_user_outlined, color: Colors.black), // Icon for email
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
-                      SizedBox(height: 20,),
-                      Text("Resend Code", style: TextStyle(color: Colors.white,fontSize: 18),),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
+                      const Text("Resend Code", style: TextStyle(color: Colors.white,fontSize: 18),),
+                      const SizedBox(height: 20,),
 
                       // Sign In Button
                       ElevatedButton(

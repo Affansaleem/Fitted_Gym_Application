@@ -87,7 +87,7 @@ class CircleGraphPainter extends CustomPainter {
     // Draw border
     canvas.drawCircle(Offset(centerX, centerY), radius, borderPaint);
 
-    final double startAngle = -90 * (3.14 / 180); // Starting angle in radians
+    const double startAngle = -90 * (3.14 / 180); // Starting angle in radians
     double currentAngle = startAngle;
 
     // Calculate total value

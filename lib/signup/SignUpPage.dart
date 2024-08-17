@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitted/firebase_authentication/firebase_auth_services.dart';
+import 'package:fitted/home/HomePage.dart';
 import 'package:fitted/signin/SignInPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,10 +14,23 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final FirebaseAuthServices _auth= FirebaseAuthServices();
   bool _obscureText = true;
+  TextEditingController _userNameController= TextEditingController();
+  TextEditingController _passwordController= TextEditingController();
+  TextEditingController _emailController= TextEditingController();
+
 
   bool _showPassword = false;
 
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _passwordController.dispose();
+    _emailController.dispose();
+
+    super.dispose();
+  }
   void _togglePasswordVisibility(bool? value) {
     setState(() {
       _obscureText = !(_showPassword = value ?? false);
@@ -109,6 +126,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             const SizedBox(height: 40,),
                             // Full Name
                             TextField(
+                              controller: _userNameController,
                               decoration: InputDecoration(
                                 labelText: 'Full Name',
                                 labelStyle: const TextStyle(color: Colors.black),
@@ -126,6 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             const SizedBox(height: 20),
                             // Email Field
                             TextField(
+                              controller: _emailController,
                               decoration: InputDecoration(
                                 labelText: 'Enter Your Email',
                                 labelStyle: const TextStyle(color: Colors.black),
@@ -142,6 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             const SizedBox(height: 20),
                             TextField(
+                              controller: _passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Enter Your Password',
@@ -158,6 +178,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             const SizedBox(height: 20,),
                             TextField(
+                              controller: _passwordController,
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Confirm Password',
@@ -192,9 +213,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                             // Sign In Button
                             ElevatedButton(
-                              onPressed: () {
-                                // Add sign-in logic here
-                              },
+                              onPressed: signup,
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black,
                                 backgroundColor:const  Color(0xFFE0FF00),
@@ -249,5 +268,24 @@ class _SignUpPageState extends State<SignUpPage> {
         ],
       ),
     );
+  }
+
+  void signup() async
+  {
+    String username= _userNameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user= await _auth.signUpWithEmailandPassword(email, password);
+
+    if(user != null)
+      {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> const HomePage()));
+      }
+    else
+      {
+        print("An error occurred while creating user");
+      }
+
   }
 }
