@@ -1,5 +1,4 @@
 import 'package:fitted/welcome/welcomePage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE0FE10),
+      backgroundColor: const Color(0xFF2C2C2C),
       body: Center(
         child: Image.asset("assets/images/img.png"),
       ),

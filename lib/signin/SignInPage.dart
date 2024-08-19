@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitted/forget_password/ForgetPassword1Page.dart';
 import 'package:fitted/navigationBar/NavigationBar.dart';
+import 'package:fitted/reusable/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../firebase_authentication/firebase_auth_services.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -12,15 +16,27 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  bool _isSigning = false;
   bool _obscureText = true;
-
   late bool _showPassword = false;
+  final FirebaseAuthServices _auth = FirebaseAuthServices();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _passwordController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
   void _togglePasswordVisibility(bool? value) {
     setState(() {
       _obscureText = !(_showPassword = value ?? false);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,17 +44,17 @@ class _SignInPageState extends State<SignInPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 50,),
-          Row(
-            children:[
-              const SizedBox(width: 30),
-              Image.asset(
+          const SizedBox(
+            height: 50,
+          ),
+          Row(children: [
+            const SizedBox(width: 30),
+            Image.asset(
               'assets/images/img.png',
               width: 80,
               height: 80,
             ),
-        ]
-          ),
+          ]),
           Stack(
             children: [
               Image.asset(
@@ -108,18 +124,23 @@ class _SignInPageState extends State<SignInPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 40,),
+                            const SizedBox(
+                              height: 40,
+                            ),
                             // Email Field
                             TextField(
+                              controller: _emailController,
                               decoration: InputDecoration(
                                 labelText: 'Enter Your Email',
-                                labelStyle: const TextStyle(color: Colors.black),
+                                labelStyle:
+                                    const TextStyle(color: Colors.black),
                                 fillColor: Colors.white,
                                 filled: true,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: const Icon(Icons.email_outlined, color: Colors.black), // Icon for email
+                                prefixIcon: const Icon(Icons.email_outlined,
+                                    color: Colors.black), // Icon for email
                               ),
                               keyboardType: TextInputType.emailAddress,
                               style: const TextStyle(color: Colors.black),
@@ -127,21 +148,26 @@ class _SignInPageState extends State<SignInPage> {
 
                             const SizedBox(height: 20),
                             TextField(
+                              controller: _passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Enter Your Password',
-                                labelStyle: const TextStyle(color: Colors.black),
+                                labelStyle:
+                                    const TextStyle(color: Colors.black),
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: const Icon(Icons.lock_outline, color: Colors.black), // Icon for password
+                                prefixIcon: const Icon(Icons.lock_outline,
+                                    color: Colors.black), // Icon for password
                               ),
                               style: const TextStyle(color: Colors.black),
                             ),
 
-                            const SizedBox(height: 20,),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -151,41 +177,57 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                                 Checkbox(
                                   value: !_obscureText,
-                                  onChanged: _togglePasswordVisibility ,
+                                  onChanged: _togglePasswordVisibility,
                                   checkColor: Colors.white,
                                   activeColor: Colors.transparent,
                                 ),
                               ],
                             ),
                             GestureDetector(
-                        
-                                onTap: (){
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context)=> const ForgetPassword1PagePage()));
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) =>
+                                              const ForgetPassword1PagePage()));
                                 },
-                                child: const Text("Forget password?",style: TextStyle(color: Colors.white,fontSize: 15,),)),
-                            const SizedBox(height: 20,),
-                        
+                                child: const Text(
+                                  "Forget password?",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                )),
+                            const SizedBox(
+                              height: 20,
+                            ),
+
                             // Sign In Button
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context)=> const MainContainer()));
-
-                                // Add sign-in logic here
-                              },
+                              onPressed: signin,
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black,
-                                backgroundColor:const  Color(0xFFE0FF00),
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                backgroundColor: const Color(0xFFE0FF00),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              child: const Text(
-                                "Sign In",
-                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                              ),
+                              child: _isSigning
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.black,
+                                    )
+                                  : const Text(
+                                      "Sign In",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                             ),
-                            const SizedBox(height: 10,),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -195,12 +237,13 @@ class _SignInPageState extends State<SignInPage> {
                                     thickness: 1,
                                     indent: 20,
                                     endIndent: 10,
-                                    height:10,
+                                    height: 10,
                                   ),
                                 ),
                                 Text(
                                   "Sign in with",
-                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
                                 ),
                                 Expanded(
                                   child: Divider(
@@ -213,7 +256,9 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20,),
+                            const SizedBox(
+                              height: 20,
+                            ),
                             Container(
                               margin: const EdgeInsets.symmetric(vertical: 10),
                               child: Row(
@@ -226,7 +271,8 @@ class _SignInPageState extends State<SignInPage> {
                                     },
                                     child: const FaIcon(
                                       FontAwesomeIcons.facebook,
-                                      color: Color(0xFFE0FF00), // Facebook color
+                                      color: Color(0xFFE0FF00),
+                                      // Facebook color
                                       size: 40,
                                     ),
                                   ),
@@ -239,7 +285,8 @@ class _SignInPageState extends State<SignInPage> {
                                     },
                                     child: const FaIcon(
                                       FontAwesomeIcons.instagram,
-                                      color: Color(0xFFE0FF00), // Instagram color
+                                      color: Color(0xFFE0FF00),
+                                      // Instagram color
                                       size: 40,
                                     ),
                                   ),
@@ -247,6 +294,7 @@ class _SignInPageState extends State<SignInPage> {
                                   // Google Sign-In Button
                                   InkWell(
                                     onTap: () {
+                                      _SignInGoogle();
                                       // Handle Google icon tap
                                       print("Google icon tapped");
                                     },
@@ -259,23 +307,86 @@ class _SignInPageState extends State<SignInPage> {
                                 ],
                               ),
                             )
-                        
-                        
                           ],
                         ),
                       ),
                     )
-
                   ],
                 ),
               ),
-
             ],
           )
-
-
         ],
       ),
     );
   }
+
+  void signin() async {
+
+    setState(() {
+      _isSigning = true;
+    });
+    String email = _emailController.text.trim();
+    String password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      setState(() {
+        _isSigning = false;
+      });
+      return;
+    }
+
+    try {
+      User? user = await _auth.signInWithEmailandPassword(email, password);
+
+      if (user != null) {
+        showToast(message: "User LoggedIn Successfully");
+
+        setState(() {
+          _isSigning = false;
+        });
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MainContainer()),
+        );
+      } else {
+        showToast(message: "Error Occurred");
+        setState(() {
+          _isSigning = false;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+      setState(() {
+        _isSigning = false;
+      });
+    }
+  }
+
+  _SignInGoogle() async {
+    print("In this func");
+    final GoogleSignIn _googleSignin = GoogleSignIn();
+
+    try {
+      final GoogleSignInAccount? account = await _googleSignin.signIn();
+      if (account != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication = await account.authentication;
+        final AuthCredential credentials = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken,
+        );
+        await _firebaseAuth.signInWithCredential(credentials);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainContainer()));
+      }
+    } catch (e) {
+      print('Google Sign-In error: $e');
+      showToast(message: "Error Occurred: $e");
+    }
+  }
+
 }

@@ -1,4 +1,5 @@
 
+import 'package:fitted/profile/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import '../reusable/horizontal_grid_cards.dart';
 
@@ -27,10 +28,13 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.only(left: 40),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                    child: Image.asset("assets/users/self.jpeg",height: 60,width: 60,
-                      fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: ()=> Navigator.push(context,MaterialPageRoute(builder: (context)=> const ProfilePage())),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+                      child: Image.asset("assets/users/self.jpeg",height: 60,width: 60,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 20,),
