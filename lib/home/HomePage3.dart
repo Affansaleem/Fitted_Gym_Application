@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../global/Signin_global.dart';
 import '../reusable/notification_card.dart';
 
 
@@ -23,10 +24,14 @@ class _HomePage3State extends State<HomePage3> {
 
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-            child: Image.asset(
-              "assets/users/self.jpeg",
+            child: GlobalVars.profileImage != null
+                ? Image.network(
+              GlobalVars.profileImage!,
               height: 60,
               width: 60,
+              fit: BoxFit.cover,
+            ):Image.asset("assets/images/img_19.png",
+              height: 60,width: 60,
               fit: BoxFit.cover,
             ),
           ),

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fitted</string>
+    <string name="facebook_app_id">1033571288408186</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">c8afa817999e6be5f3c990172567ef62</string>
+</resources>

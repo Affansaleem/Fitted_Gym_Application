@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitted/forget_password/ForgetPassword1Page.dart';
+import 'package:fitted/global/Signin_global.dart';
 import 'package:fitted/navigationBar/NavigationBar.dart';
 import 'package:fitted/reusable/toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,8 +22,18 @@ class _SignInPageState extends State<SignInPage> {
   late bool _showPassword = false;
   final FirebaseAuthServices _auth = FirebaseAuthServices();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  Map<String, dynamic>? employeeData;
+
+  Future<void> fetchEmployeeData() async {
+    Map<String, dynamic>? data = await DatabaseMethods().getEmployee("0");
+    setState(() {
+      employeeData = data;
+      GlobalVars.profileImage = employeeData?['profileImageUrl'];
+      print(GlobalVars.profileImage);
+    });
+  }
 
   @override
   void dispose() {
@@ -30,6 +41,7 @@ class _SignInPageState extends State<SignInPage> {
     _emailController.dispose();
     super.dispose();
   }
+
   void _togglePasswordVisibility(bool? value) {
     setState(() {
       _obscureText = !(_showPassword = value ?? false);
@@ -50,7 +62,7 @@ class _SignInPageState extends State<SignInPage> {
             const SizedBox(width: 30),
             Image.asset(
               'assets/images/img.png',
-              width: 80,
+
               height: 80,
             ),
           ]),
@@ -321,7 +333,6 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void signin() async {
-
     setState(() {
       _isSigning = true;
     });
@@ -342,6 +353,8 @@ class _SignInPageState extends State<SignInPage> {
 
       if (user != null) {
         showToast(message: "User LoggedIn Successfully");
+        GlobalVars.uid = user.uid;
+        await fetchEmployeeData();
 
         setState(() {
           _isSigning = false;
@@ -368,24 +381,24 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   _SignInGoogle() async {
-    print("In this func");
     final GoogleSignIn _googleSignin = GoogleSignIn();
 
     try {
       final GoogleSignInAccount? account = await _googleSignin.signIn();
       if (account != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await account.authentication;
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await account.authentication;
         final AuthCredential credentials = GoogleAuthProvider.credential(
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken,
         );
         await _firebaseAuth.signInWithCredential(credentials);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainContainer()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MainContainer()));
       }
     } catch (e) {
       print('Google Sign-In error: $e');
       showToast(message: "Error Occurred: $e");
     }
   }
-
 }

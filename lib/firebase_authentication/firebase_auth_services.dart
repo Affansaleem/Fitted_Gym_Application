@@ -48,11 +48,48 @@ class DatabaseMethods {
   }
 
   Future<Map<String, dynamic>?> getEmployee(String id) async {
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(id)
-        .get();
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection("Users").doc(id).get();
 
     return doc.exists ? doc.data() as Map<String, dynamic>? : null;
   }
+
+  Future<void> addWorkouts(Map<String, dynamic> workoutInfoMap) async {
+    try {
+      DocumentReference docRef = FirebaseFirestore.instance.collection('Workouts').doc();
+      await docRef.set({
+        ...workoutInfoMap,
+        'documentId': docRef.id,
+      });
+      print("Workout added successfully with ID: ${docRef.id}");
+    } catch (e) {
+      print('Error adding workout: $e');
+    }
+  }
+
+  // To retrieve all data from workouts collection
+  Future<List<Map<String, dynamic>>> fetchWorkouts() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Workouts').get();
+    List<Map<String, dynamic>> workouts = querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+    return workouts;
+  }
+
+  Future<void> deleteWorkout(String workoutId) async {
+    try {
+      print(workoutId);
+      await FirebaseFirestore.instance
+          .collection('Workouts') // Your collection name
+          .doc(workoutId) // The ID of the document you want to delete
+          .delete();
+      print('Document deleted successfully.');
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
+  }
+
+
+
 }

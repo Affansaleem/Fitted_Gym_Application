@@ -1,6 +1,8 @@
-import 'package:fitted/forget_password/ForgetPassword2Page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fitted/reusable/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'ForgetPassword2Page.dart'; // Make sure this file exists
 
 class ForgetPassword1PagePage extends StatefulWidget {
   const ForgetPassword1PagePage({super.key});
@@ -10,7 +12,19 @@ class ForgetPassword1PagePage extends StatefulWidget {
 }
 
 class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
+  final TextEditingController _emailController = TextEditingController();
 
+  Future<void> _sendPasswordResetEmail() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text.trim());
+
+        showToast(message:'Password reset email sent! Check your inbox.');
+
+      Navigator.pop(context);
+    } catch (e) {
+      showToast(message:"Error $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +37,7 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
             children: [
               Positioned(
                 left: 10,
-                child: Image.asset("assets/images/img_5.png",
-                  height: 400,
-                ),
+                child: Image.asset("assets/images/img_5.png", height: 400),
               ),
               Image.asset(
                 'assets/images/img_3.png',
@@ -54,7 +66,7 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                     children: [
                       const SizedBox(
                         width: 250,
-                        child:  Text(
+                        child: Text(
                           textAlign: TextAlign.center,
                           "Please Enter Your Email Address To Receive a Verification Code",
                           style: TextStyle(
@@ -64,9 +76,10 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20,),
-                      // Full Name
+                      const SizedBox(height: 20),
+                      // Email Input
                       TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Enter Email Address',
                           labelStyle: const TextStyle(color: Colors.black),
@@ -75,24 +88,24 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black), // Icon for email
+                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.black),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(color: Colors.black),
                       ),
-                      const SizedBox(height: 20,),
-                      const Text("Try Another Way", style: TextStyle(color: Colors.white,fontSize: 18),),
-                      const SizedBox(height: 20,),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Try Another Way",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      const SizedBox(height: 20),
 
-                      // Sign In Button
+                      // Send Button
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>const ForgetPassword2PagePage()));
-                          // Add sign-in logic here
-                        },
+                        onPressed: _sendPasswordResetEmail,
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor:const  Color(0xFFE0FF00),
+                          backgroundColor: const Color(0xFFE0FF00),
                           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -103,19 +116,12 @@ class _ForgetPassword1PagePageState extends State<ForgetPassword1PagePage> {
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                         ),
                       ),
-
-
-
-
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
-         
-
         ],
       ),
     );

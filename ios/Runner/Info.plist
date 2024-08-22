@@ -18,6 +18,10 @@
 	<string>fitted</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Needs PhotoLib access</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Needs camera access</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

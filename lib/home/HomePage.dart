@@ -1,6 +1,7 @@
 
 import 'package:fitted/profile/ProfilePage.dart';
 import 'package:flutter/material.dart';
+import '../global/Signin_global.dart';
 import '../reusable/horizontal_grid_cards.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,8 +32,15 @@ class _HomePageState extends State<HomePage> {
                   GestureDetector(
                     onTap: ()=> Navigator.push(context,MaterialPageRoute(builder: (context)=> const ProfilePage())),
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-                      child: Image.asset("assets/users/self.jpeg",height: 60,width: 60,
+                      borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+                      child:  GlobalVars.profileImage != null
+                      ? Image.network(
+                        GlobalVars.profileImage!,
+                        height: 60,
+                        width: 60,
+                        fit: BoxFit.cover,
+                      ):Image.asset("assets/images/img_19.png",
+                        height: 60,width: 60,
                         fit: BoxFit.cover,
                       ),
                     ),

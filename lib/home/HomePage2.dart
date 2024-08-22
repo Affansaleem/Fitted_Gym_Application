@@ -1,5 +1,6 @@
 import 'package:fitted/reusable/horizontal_grid_graphs_card.dart';
 import 'package:flutter/material.dart';
+import '../global/Signin_global.dart';
 import '../reusable/calender.dart';
 import 'package:intl/intl.dart';
 
@@ -34,10 +35,14 @@ class _HomePage2State extends State<HomePage2> {
         actions: [
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-            child: Image.asset(
-              "assets/users/self.jpeg",
+            child: GlobalVars.profileImage != null
+                ? Image.network(
+              GlobalVars.profileImage!,
               height: 60,
               width: 60,
+              fit: BoxFit.cover,
+            ):Image.asset("assets/images/img_19.png",
+              height: 60,width: 60,
               fit: BoxFit.cover,
             ),
           ),
